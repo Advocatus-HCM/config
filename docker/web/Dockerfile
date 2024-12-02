@@ -1,8 +1,7 @@
-
 FROM node:lts
 
 WORKDIR "/app"
 
 COPY . .
 
-CMD ["tail", "-f", "/dev/null"]
+CMD ["npm", "run", "dev"]
