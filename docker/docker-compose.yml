@@ -1,10 +1,34 @@
 services:
-  web:
+  advocatus_web:
     container_name: advocatus_web
     build: 
-      context: ../../web
-      dockerfile: ../config/docker/web/Dockerfile
+      context: ../../advocatus_web
+      dockerfile: ../config/docker/advocatus_web/Dockerfile
     ports:
       - '3000:5173'
     volumes:
-      - '../../web/:/app'
+      - '../../advocatus_web/:/app'
+  
+  advotacus_personal_manager_ms:
+    container_name: advotacus_personal_manager_ms
+    build: 
+      context: ../../advotacus_personal_manager_ms
+      dockerfile: ../config/docker/advotacus_personal_manager_ms/Dockerfile
+    ports:
+      - '8000:8000'
+    volumes:
+      - '../../advotacus_personal_manager_ms/:/app'
+    depends_on:
+      - advotacus_personal_manager_db
+  
+  advotacus_personal_manager_db:
+    container_name: advotacus_personal_manager_db
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${personal_manager_db_username}
+      MONGO_INITDB_ROOT_PASSWORD: ${personal_manager_db_password}
+      MONG_INITDB_DATABASE: ${personal_manager_db}
+    ports:
+      - '27017:27017'
+    volumes:
+      - ../../advotacus_personal_manager_ms/database:/data/db
