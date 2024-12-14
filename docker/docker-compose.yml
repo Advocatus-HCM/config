@@ -24,6 +24,8 @@ services:
   advocatus_personal_manager_db:
     container_name: advocatus_personal_manager_db
     image: mongo:latest
+    env_file:
+      - ../../advocatus_personal_manager_ms/.env
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${personal_manager_db_username}
       MONGO_INITDB_ROOT_PASSWORD: ${personal_manager_db_password}
