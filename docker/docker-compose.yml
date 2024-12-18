@@ -35,27 +35,25 @@ services:
 
   ##############################################################################
 
-  # advocatus_authentification_ms:
-  #   container_name: advocatus_authentification_ms
-  #   build:
-  #     context: ../../advocatus_authentification_ms/authentification-manager-ms
-  #     dockerfile: ../config/docker/advocatus_authentification_ms/Dockerfile
-  #   ports:
-  #     - '8080:8080'
-  #   volumes:
-  #     - '../../authentification-manager-ms/:/app'
-  #   depends_on:
-  #     - advocatus_authentification_db
+  advocatus_authentification_ms:
+    container_name: advocatus_authentification_ms
+    build:
+      context: ../../advocatus_authentification_ms/authentification-manager-ms
+      dockerfile: ../../config/docker/advocatus_authentification_ms/Dockerfile
+    ports:
+      - '8080:8080'
+    volumes:
+       - '../../authentification-manager-ms/:/app'
+    depends_on:
+      - advocatus_authentification_db
 
-  # advocatus_authentification_db:
-  #   container_name: advocatus_authentification_db
-  #   image: mysql:8.0
-  #   env_file:
-  #     - ../../advocatus_authentification_ms/authentification-manager-ms/.env
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-  #     MYSQL_DATABASE: advocatus_authentification_manager_bd
-  #   ports:
-  #     - '3306:3306'
-  #   volumes:
-  #     - '../../advocatus_authentification_ms/bd/init.sqk:/docker-entrypoint-initdb.d/init.sql'
+  advocatus_authentification_db:
+    container_name: advocatus_authentification_db
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      MYSQL_DATABASE: advocatus_authentification_manager_bd
+    ports:
+      - '3307:3306'
+    volumes:
+      - '../../advocatus_authentification_ms/bd/init.sqk:/docker-entrypoint-initdb.d/init.sql'

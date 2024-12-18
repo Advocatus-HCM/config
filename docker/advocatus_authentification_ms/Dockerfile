@@ -6,7 +6,7 @@ WORKDIR /app
 ARG JAR_FILE=target/*.jar
 # Copy the JAR file from your microservice's target directory to the container
 # Adjust the relative path to match your directory structure
-COPY ../../../advocatus_authentification_ms/authentification-manager-ms/target/authentification-manager-ms-0.0.1-SNAPSHOT.jar app.jar
+COPY ./target/authentification-manager-ms-0.0.1-SNAPSHOT.jar app.jar
 
 # Expose the port that the application will run on
 EXPOSE 8080
