@@ -1,17 +1,17 @@
 services:
   advocatus_web:
     container_name: advocatus_web
-    build: 
+    build:
       context: ../../advocatus_web
       dockerfile: ../config/docker/advocatus_web/Dockerfile
     ports:
       - '3000:5173'
     volumes:
       - '../../advocatus_web/:/app'
-  
+
   advocatus_personal_manager_ms:
     container_name: advocatus_personal_manager_ms
-    build: 
+    build:
       context: ../../advocatus_personal_manager_ms
       dockerfile: ../config/docker/advocatus_personal_manager_ms/Dockerfile
     ports:
@@ -20,7 +20,7 @@ services:
       - '../../advocatus_personal_manager_ms/:/app'
     depends_on:
       - advocatus_personal_manager_db
-  
+
   advocatus_personal_manager_db:
     container_name: advocatus_personal_manager_db
     image: mongo:latest
@@ -34,28 +34,28 @@ services:
       - '27017:27017'
     volumes:
       - ../../advocatus_personal_manager_ms/database:/data/db
+  ##############################################################################
   
-  # advocatus_authentification_ms:
-  #   container_name: advocatus_authentification_ms
-  #   build: 
-  #     context: ../../advocatus_authentification_ms/authentification-manager-ms/
-  #     dockerfile: ../../config/docker/advocatus_authentification_ms/Dockerfile
-  #   ports:
-  #     - '8080:8080'
-  #   volumes:
-  #     - '../../advocatus_authentification_ms/authentification-manager-ms/:/app'
-  #   depends_on:
-  #     - advocatus_authentification_db
-  
+  advocatus_authentification_ms:
+    container_name: advocatus_authentification_ms
+    build:
+      context: ../../advocatus_authentification_ms/authentification-manager-ms
+      dockerfile: ../config/docker/advocatus_authentification_ms/Dockerfile
+    ports:
+      - '8080:8080'
+    volumes:
+      - '../../sec/authentification-manager-ms/src'
+    depends_on:
+      - advocatus_authentification_db
+
   advocatus_authentification_db:
     container_name: advocatus_authentification_db
     image: mysql:8.0
     env_file:
       - ../../advocatus_authentification_ms/authentification-manager-ms/.env
     environment:
-      MYSQL_ROOT_PASSWORD: test
-      MYSQL_DATABASE: test
-      MYSQL_USER: test
-      MYSQL_PASSWORD: test
+      MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+      MYSQL_DATABASE: advocatus_authentification_manager_bd
     ports:
       - '3306:3306'
+    
