@@ -34,3 +34,28 @@ services:
       - '27017:27017'
     volumes:
       - ../../advocatus_personal_manager_ms/database:/data/db
+  
+  # advocatus_authentification_ms:
+  #   container_name: advocatus_authentification_ms
+  #   build: 
+  #     context: ../../advocatus_authentification_ms/authentification-manager-ms/
+  #     dockerfile: ../../config/docker/advocatus_authentification_ms/Dockerfile
+  #   ports:
+  #     - '8080:8080'
+  #   volumes:
+  #     - '../../advocatus_authentification_ms/authentification-manager-ms/:/app'
+  #   depends_on:
+  #     - advocatus_authentification_db
+  
+  advocatus_authentification_db:
+    container_name: advocatus_authentification_db
+    image: mysql:8.0
+    env_file:
+      - ../../advocatus_authentification_ms/authentification-manager-ms/.env
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    ports:
+      - '3306:3306'

@@ -5,16 +5,14 @@ FROM eclipse-temurin:21-jdk as build
 WORKDIR /app
 
 # Copy the Maven build files and source code
-COPY pom.xml mvnw ./
-COPY .mvn .mvn
-COPY src ./src
+COPY . . 
 
 # Build the application using Maven
-RUN ./mvnw clean package -DskipTests
+RUN mvnw clean package -DskipTests
 
 # Use a smaller base image for running the app
 FROM eclipse-temurin:21-jre
-1
+
 # Set the working directory for the runtime container
 WORKDIR /app
 
