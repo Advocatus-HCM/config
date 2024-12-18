@@ -25,9 +25,9 @@ services:
     container_name: advocatus_personal_manager_db
     image: mongo:latest
     environment:
-      MONGO_INITDB_ROOT_USERNAME: ${personal_manager_db_username}
-      MONGO_INITDB_ROOT_PASSWORD: ${personal_manager_db_password}
-      MONG_INITDB_DATABASE: ${personal_manager_db}
+      MONGO_INITDB_ROOT_USERNAME: ${PERSONAL_MANAGER_DB_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${PERSONAL_MANAGER_DB_PASSWORD}
+      MONG_INITDB_DATABASE: ${PERSONAL_MANAGER_DB}
     ports:
       - '27017:27017'
     volumes:
