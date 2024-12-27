@@ -35,33 +35,9 @@
 
 #   ##############################################################################
 
-#   advocatus_authentification_ms:
-#     container_name: advocatus_authentification_ms
-#     build:
-#       context: ../../advocatus_authentification_ms/authentification-manager-ms
-#       dockerfile: ../../config/docker/advocatus_authentification_ms/Dockerfile
-#     ports:
-#       - '8080:8080'
-#     volumes:
-#        - '../../authentification-manager-ms/:/app'
-#     depends_on:
-#       - advocatus_authentification_db
-
-#   advocatus_authentification_db:
-#     container_name: advocatus_authentification_db
-#     image: mysql:8.0
-#     environment:
-#       MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
-#       MYSQL_DATABASE: advocatus_authentification_manager_bd
-#     ports:
-#       - '3307:3306'
-#     volumes:
-#       - '../../advocatus_authentification_ms/bd/init.sqk:/docker-entrypoint-initdb.d/init.sql'
-
-
 services:
   advocatus_authentification_ms:
-    container_name: advocatus_authentification_ms
+    container_name: advocatus_authentificator_ms
     build:
       context: ../../advocatus_authentificator_ms
       dockerfile: ../config/docker/advocatus_authentificator_ms/Dockerfile
@@ -69,29 +45,27 @@ services:
       - "8000:8000"
     volumes:
       - "../../advocatus_authentificator_ms/app:/app/app"    # Mount local `app` directory into `/app` inside the container
-  # Mount the project directory to /app inside the container
-    # depends_on:
-    #   - advocatus_authentification_db  # Ensure the db service is up before the application starts
-    # networks:
-    #   - autenticador_network  # Use the shared network
-    #entrypoint: ["wait-for-it", "advocatus_authentification_db:3306", "--", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+    depends_on:
+      - advocatus_authentificator_db  # Ensure the db service is up before the application starts
+    networks:
+      - autenticador_network  # Use the shared network
+    entrypoint: ["wait-for-it", "advocatus_authentificator_db:3306", "--", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
 
-  # advocatus_authentification_db:
-  #   container_name: advocatus_authentification_db
-  #   image: mysql:8.0  # Use the MySQL 8.0 image
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root # Use the environment variable for the DB password
-  #     MYSQL_DATABASE: advocatus_authentification_db
-  #   ports:
-  #     - "3307:3306"  # Expose MySQL port 3306 on port 3307
-  #   volumes:
-  #     - "../../advocatus_authentification_ms/bd/init.sqk:/docker-entrypoint-initdb.d/init.sql"  # Initialize DB with custom SQL script
-  #   networks:
-  #     - autenticador_network  # Use the shared network
+  advocatus_authentificator_db:
+    container_name: advocatus_authentificator_db
+    image: mysql:8.0  # Use the MySQL 8.0 image
+    environment:
+      MYSQL_ROOT_PASSWORD: root # Use the environment variable for the DB password
+      MYSQL_DATABASE: advocatus_authentificator_db
+    ports:
+      - "3307:3306"  # Expose MySQL port 3306 on port 3307
+    volumes:
+      - db_data:/var/lib/mysql   
+    networks:
+      - autenticador_network  # Use the shared network
 
-# volumes:
-#   db_data:  # Define the volume for MySQL data persistence
+volumes:
+  db_data:  # Define the volume for MySQL data persistence
 
-# networks:
-#   autenticador_network:
-#     # external: true  # Use an external network that has been created outside this configuration
+networks:
+  autenticador_network:
