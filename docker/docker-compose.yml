@@ -33,7 +33,8 @@ services:
     volumes:
       - '../../advocatus_personal_manager_ms/database:/data/db'
 
-#   #############################################################################
+#   ##############################################################################
+
   advocatus_authentification_ms:
     container_name: advocatus_authentificator_ms
     build:
@@ -51,28 +52,18 @@ services:
       - autenticador_network  # Use the shared network
     entrypoint: ["wait-for-it", "advocatus_authentificator_db:3306", "--", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
-  version: "3.8"
-
-  services:
-    advocatus_authentificator_db:
-      container_name: advocatus_authentificator_db
-      image: mysql:8.0  # Use the MySQL 8.0 image
-      environment:
-        MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}  # Use the environment variable for the DB password
-        MYSQL_DATABASE: ${MYSQL_DATABASE}
-      ports:
-        - "3306:3306"  # Expose MySQL port 3306 on port 3306
-      volumes:
-        - db_data:/var/lib/mysql   
-      networks:
-        - autenticador_network  # Use the shared network
-
-volumes:
-  db_data:
-
-networks:
-  autenticador_network:
-
+  advocatus_authentificator_db:
+    container_name: advocatus_authentificator_db
+    image: mysql:8.0  # Use the MySQL 8.0 image
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Use the environment variable for the DB password
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"  # Expose MySQL port 3306 on port 3307
+    volumes:
+      - db_data:/var/lib/mysql   
+    networks:
+      - autenticador_network  # Use the shared network
 
 volumes:
   db_data:  # Define the volume for MySQL data persistence
