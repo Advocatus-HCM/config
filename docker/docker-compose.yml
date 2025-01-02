@@ -41,7 +41,7 @@ services:
       context: ../../advocatus_authentificator_ms
       dockerfile: ../config/docker/advocatus_authentificator_ms/Dockerfile
     ports:
-      - "8000:8000"
+      - "8080:8080"
     env_file:
       - ../../advocatus_authentificator_ms/.env 
     volumes:
@@ -59,11 +59,20 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Use the environment variable for the DB password
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - "3306:3306"  # Expose MySQL port 3306 on port 3307
+      - "3307:3306"  # Expose MySQL port 3306 on port 3307
     volumes:
       - db_data:/var/lib/mysql   
     networks:
       - autenticador_network  # Use the shared network
+
+  advocatus_api_gateway_ms:
+    container_name: advocatus_api_gateway_ms
+    build:
+      context: ../../advocatus_api_gateway
+      dockerfile: ../config/docker/advocatus_api_gateway_ms/Dockerfile
+    ports:
+      - "4000:4000"
+
 
 volumes:
   db_data:  # Define the volume for MySQL data persistence
