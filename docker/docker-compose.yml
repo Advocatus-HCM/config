@@ -70,8 +70,12 @@ services:
     build:
       context: ../../advocatus_api_gateway
       dockerfile: ../config/docker/advocatus_api_gateway_ms/Dockerfile
+    environment:
+      AUTH_MS_URL: http://advocatus_authentification_ms:8080 
     ports:
       - "4000:4000"
+    networks:
+      - autenticador_network  # Use the shared network
 
 
 volumes:
