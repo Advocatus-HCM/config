@@ -15,7 +15,7 @@ services:
       context: ../../advocatus_personal_manager_ms
       dockerfile: ../config/docker/advocatus_personal_manager_ms/Dockerfile
     ports:
-      - '8000:8000'
+      - '8001:8001'
     volumes:
       - '../../advocatus_personal_manager_ms/:/app'
     depends_on:
@@ -41,20 +41,18 @@ services:
       context: ../../advocatus_authentificator_ms
       dockerfile: ../config/docker/advocatus_authentificator_ms/Dockerfile
     ports:
-      - "8080:8080"
+      - "8000:8000"
     env_file:
       - ../../advocatus_authentificator_ms/.env 
     volumes:
       - "../../advocatus_authentificator_ms/app:/app/app"    # Mount local `app` directory into `/app` inside the container
     depends_on:
       - advocatus_authentificator_db  # Ensure the db service is up before the application starts
-    networks:
-      - autenticador_network  # Use the shared network
     entrypoint: ["wait-for-it", "advocatus_authentificator_db:3306", "--", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
   advocatus_authentificator_db:
     container_name: advocatus_authentificator_db
-    image: mysql:8.0  # Use the MySQL 8.0 image
+    image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Use the environment variable for the DB password
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -62,25 +60,16 @@ services:
       - "3307:3306"  # Expose MySQL port 3306 on port 3307
     volumes:
       - db_data:/var/lib/mysql   
-    networks:
-      - autenticador_network  # Use the shared network
 
-  advocatus_api_gateway_ms:
-    container_name: advocatus_api_gateway_ms
-    build:
-      context: ../../advocatus_api_gateway
-      dockerfile: ../config/docker/advocatus_api_gateway_ms/Dockerfile
-    environment:
-      AUTH_MS_URL: http://advocatus_authentification_ms:8080 
-    ports:
-      - "4000:4000"
-    networks:
-      - autenticador_network  # Use the shared network
-
+  # advocatus_api_gateway_ms:
+  #   container_name: advocatus_api_gateway_ms
+  #   build:
+  #     context: ../../advocatus_api_gateway
+  #     dockerfile: ../config/docker/advocatus_api_gateway_ms/Dockerfile
+  #   environment:
+  #     AUTH_MS_URL: http://advocatus_authentification_ms:8080 
+  #   ports:
+  #     - "4000:4000"
 
 volumes:
-  db_data:  # Define the volume for MySQL data persistence
-
-networks:
-  autenticador_network:
-   external: true
+  db_data:  # Define the volume for MySQL data persistences
