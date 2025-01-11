@@ -61,15 +61,21 @@ services:
     volumes:
       - db_data:/var/lib/mysql   
 
-  # advocatus_api_gateway_ms:
-  #   container_name: advocatus_api_gateway_ms
-  #   build:
-  #     context: ../../advocatus_api_gateway
-  #     dockerfile: ../config/docker/advocatus_api_gateway_ms/Dockerfile
-  #   environment:
-  #     AUTH_MS_URL: http://advocatus_authentification_ms:8080 
-  #   ports:
-  #     - "4000:4000"
+  advocatus_api_gateway_ms:
+    container_name: advocatus_api_gateway_ms
+    build:
+      context: ../../advocatus_api_gateway
+      dockerfile: ../config/docker/advocatus_api_gateway_ms/Dockerfile
+    environment:
+      AUTH_MS_URL: http://advocatus_authentification_ms:8000
+      PERSONAL_MANAGER_MS_URL: http://advocatus_personal_manager_ms:8001 
+    ports:
+      - "4000:4000"
+    volumes:
+      - '../../advocatus_api_gateway/:/app'
+    depends_on:
+      - advocatus_authentification_ms
+      - advocatus_personal_manager_ms
 
 volumes:
   db_data:  # Define the volume for MySQL data persistences
