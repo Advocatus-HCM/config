@@ -3,7 +3,7 @@ services:
     container_name: advocatus_web
     build:
       context: ../../advocatus_web
-      dockerfile: ../config/docker/advocatus_web/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - '3000:5173'
     volumes:
@@ -13,7 +13,7 @@ services:
     container_name: advocatus_personal_manager_ms
     build:
       context: ../../advocatus_personal_manager_ms
-      dockerfile: ../config/docker/advocatus_personal_manager_ms/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - '8001:8001'
     volumes:
@@ -33,31 +33,29 @@ services:
     volumes:
       - '../../advocatus_personal_manager_ms/database:/data/db'
 
-#   ##############################################################################
-
   advocatus_authentification_ms:
     container_name: advocatus_authentificator_ms
     build:
       context: ../../advocatus_authentificator_ms
-      dockerfile: ../config/docker/advocatus_authentificator_ms/Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8000:8000"
     env_file:
       - ../../advocatus_authentificator_ms/.env 
     volumes:
-      - "../../advocatus_authentificator_ms/app:/app/app"    # Mount local `app` directory into `/app` inside the container
+      - "../../advocatus_authentificator_ms/app:/app/app"
     depends_on:
-      - advocatus_authentificator_db  # Ensure the db service is up before the application starts
+      - advocatus_authentificator_db
     entrypoint: ["wait-for-it", "advocatus_authentificator_db:3306", "--", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
   advocatus_authentificator_db:
     container_name: advocatus_authentificator_db
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # Use the environment variable for the DB password
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - "3307:3306"  # Expose MySQL port 3306 on port 3307
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql   
 
@@ -65,7 +63,7 @@ services:
     container_name: advocatus_api_gateway_ms
     build:
       context: ../../advocatus_api_gateway
-      dockerfile: ../config/docker/advocatus_api_gateway_ms/Dockerfile
+      dockerfile: Dockerfile
     environment:
       AUTH_MS_URL: http://advocatus_authentification_ms:8000
       PERSONAL_MANAGER_MS_URL: http://advocatus_personal_manager_ms:8001 
@@ -78,4 +76,4 @@ services:
       - advocatus_personal_manager_ms
 
 volumes:
-  db_data:  # Define the volume for MySQL data persistences
+  db_data:
