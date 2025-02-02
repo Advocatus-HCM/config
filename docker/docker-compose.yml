@@ -1,13 +1,13 @@
 services:
-  advocatus_web:
-    container_name: advocatus_web
+  advocatus_web_app:
+    container_name: advocatus_web_app
     build:
-      context: ../../advocatus_web
+      context: ../../advocatus_web_app
       dockerfile: Dockerfile
     ports:
       - '3000:5173'
     volumes:
-      - '../../advocatus_web/:/app'
+      - '../../advocatus_web_app/:/app'
 
   advocatus_personal_manager_ms:
     container_name: advocatus_personal_manager_ms
@@ -33,7 +33,7 @@ services:
     volumes:
       - '../../advocatus_personal_manager_ms/database:/data/db'
 
-  advocatus_authentification_ms:
+  advocatus_authentificator_ms:
     container_name: advocatus_authentificator_ms
     build:
       context: ../../advocatus_authentificator_ms
@@ -86,20 +86,20 @@ services:
       - cases_db_data:/data/db
       - ../../advocatus_cases_ms/mongo_data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
 
-  advocatus_api_gateway_ms:
-    container_name: advocatus_api_gateway_ms
+  advocatus_ag:
+    container_name: advocatus_ag
     build:
-      context: ../../advocatus_api_gateway
+      context: ../../advocatus_ag
       dockerfile: Dockerfile
     environment:
-      AUTH_MS_URL: http://advocatus_authentification_ms:8000
+      AUTH_MS_URL: http://advocatus_authentificator_ms:8000
       PERSONAL_MANAGER_MS_URL: http://advocatus_personal_manager_ms:8001 
     ports:
       - "4000:4000"
     volumes:
-      - '../../advocatus_api_gateway/:/app'
+      - '../../advocatus_ag/:/app'
     depends_on:
-      - advocatus_authentification_ms
+      - advocatus_authentificator_ms
       - advocatus_personal_manager_ms
 
 volumes:
