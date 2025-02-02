@@ -79,7 +79,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${CASES_DB_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${CASES_DB_PASSWORD}
-      MONG_INITDB_DATABASE: ${CASES_DB}
+      MONGO_INITDB_DATABASE: ${CASES_DB}
     command: --port 27018
     ports:
       - "27018:27018"
