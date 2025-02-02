@@ -74,14 +74,15 @@ services:
       - advocatus_cases_db 
   
   advocatus_cases_db:
-    image: mongo:latest
     container_name: advocatus_cases_db
-    ports:
-      - "27018:27018"
+    image: mongo:latest
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${CASES_DB_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${CASES_DB_PASSWORD}
       MONG_INITDB_DATABASE: ${CASES_DB}
+    command: --port 27018
+    ports:
+      - "27018:27018"
     volumes:
       - cases_db_data:/data/db
       - ../../advocatus_cases_ms/mongo_data/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
