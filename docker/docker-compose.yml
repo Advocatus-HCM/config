@@ -69,7 +69,7 @@ services:
     env_file:
       - "../../advocatus_cases_ms/.env"
     volumes:
-      - "../../advocatus_cases_ms/:/app"
+      - '../../advocatus_authentificator_ms/database:/data/db'
     depends_on:
       - advocatus_cases_db 
   
