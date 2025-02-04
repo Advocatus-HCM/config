@@ -57,7 +57,7 @@ services:
     ports:
       - "3307:3306"
     volumes:
-      - db_data:/var/lib/mysql  
+      - '../../advocatus_authentificator_ms/database:/data/db'
 
   advocatus_cases_ms:
     container_name: advocatus_cases_ms
@@ -69,7 +69,7 @@ services:
     env_file:
       - "../../advocatus_cases_ms/.env"
     volumes:
-      - '../../advocatus_authentificator_ms/database:/data/db'
+      - "../../advocatus_cases_ms/:/app"
     depends_on:
       - advocatus_cases_db 
   
